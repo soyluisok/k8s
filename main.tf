@@ -110,9 +110,15 @@ resource "aws_network_interface" "k8s_net" {
   }
 }
 
+resource "aws_key_pair" "k8spem" {
+  key_name   = "k8spem"
+  public_key = "${file("mykey-openssh.pub")}"
+}
+
 
 resource "aws_instance" "k8s" {
         ami = "ami-05fa00d4c63e32376"
+        key_name = "k8spem"
         instance_type = "t2.medium"
         network_interface {
         network_interface_id = aws_network_interface.k8s_net.id
